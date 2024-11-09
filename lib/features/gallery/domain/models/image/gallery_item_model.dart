@@ -13,7 +13,7 @@ class GalleryItemModel with _$GalleryItemModel {
     @Default(0) int datetime,
     @Default('') String accountUrl,
     @Default(0) int views,
-    @Default(GalleryItemImageModel()) GalleryItemImageModel imageData,
+    @Default([]) List<GalleryItemImageModel> images,
     @Default([]) List<GalleryItemTagModel> tags,
   }) = _GalleryItemModel;
 
@@ -24,15 +24,19 @@ class GalleryItemModel with _$GalleryItemModel {
         datetime: json['datetime'] ?? 0,
         accountUrl: json['account_url'] ?? '',
         views: json['views'] ?? '',
-        imageData: json['images'] != null
-            ? GalleryItemImageModel.fromJson(
-                (json['images'] as List<dynamic>).first as Map<String, dynamic>,
-              )
-            : const GalleryItemImageModel(),
-        tags: (json['tags'] as List<dynamic>)
-            .map(
-              (element) => GalleryItemTagModel.fromJsonModel(element as Map<String, dynamic>),
-            )
-            .toList(),
+        images: json['images'] != null
+            ? (json['images'] as List<dynamic>)
+                .map(
+                  (element) => GalleryItemImageModel.fromJson(element as Map<String, dynamic>),
+                )
+                .toList()
+            : [],
+        tags: json['tags'] != null
+            ? (json['tags'] as List<dynamic>)
+                .map(
+                  (element) => GalleryItemTagModel.fromJsonModel(element as Map<String, dynamic>),
+                )
+                .toList()
+            : [],
       );
 }

@@ -9,13 +9,18 @@ import 'package:spartapp_test/core/exceptions.dart';
 class ApiClient implements BaseApiClient {
   @override
   Future<T> invokeGet<T>({
-    required Uri path,
+    required String path,
     Map<String, String>? headerParams,
     required BaseJsonParser<T> jsonParser,
   }) async {
+    final url = Uri.https(
+      'api.imgur.com',
+      path,
+    );
+
     try {
       final response = await http.get(
-        path,
+        url,
         headers: {'Authorization': 'Client-ID ${dotenv.env['CLIENT_ID']}'},
       ).timeout(const Duration(seconds: 30));
 

@@ -7,6 +7,7 @@ part 'gallery_item_image_model.g.dart';
 class GalleryItemImageModel with _$GalleryItemImageModel {
   const factory GalleryItemImageModel({
     @Default('') String link,
+    @Default('') String description,
     @Default('') String type,
   }) = _GalleryItemImageModel;
 

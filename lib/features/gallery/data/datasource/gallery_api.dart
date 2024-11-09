@@ -7,18 +7,12 @@ class GalleryApi {
 
   GalleryApi({required this.baseApiClient});
 
-  Future<List<GalleryItemModel>> fetchGallery({required int page}) async {
-    final url = Uri.https(
-      'api.imgur.com',
-      '/3/gallery/hot/viral/$page',
-    );
-
-    return await baseApiClient.invokeGet<List<GalleryItemModel>>(
-      path: url,
-      jsonParser: ListJsonParser<GalleryItemModel>(
-        fromJson: GalleryItemModel.fromJsonModel,
-        jsonKeyName: 'data',
-      ),
-    );
-  }
+  Future<List<GalleryItemModel>> fetchGallery({required int page}) async =>
+      await baseApiClient.invokeGet<List<GalleryItemModel>>(
+        path: '/3/gallery/top/viral/$page',
+        jsonParser: ListJsonParser<GalleryItemModel>(
+          fromJson: GalleryItemModel.fromJsonModel,
+          jsonKeyName: 'data',
+        ),
+      );
 }

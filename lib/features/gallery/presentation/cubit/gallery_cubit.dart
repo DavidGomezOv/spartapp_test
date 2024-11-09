@@ -18,19 +18,22 @@ class GalleryCubit extends Cubit<GalleryState> {
 
     final currentPage = state.currentPage + 1;
 
-    print('CURRENT PAGE ${currentPage}');
-
-    await Future.delayed(const Duration(seconds: 3));
-
     final result = await galleryRepository.fetchGallery(page: currentPage);
 
     result.when(
       success: (data) {
-        final filteredList = data
-            .where(
-              (element) => element.imageData.type.contains('image'),
-            )
-            .toList();
+        final filteredList = [];
+        for (final imageModel in data) {
+          final imageOnlyFiles = imageModel.images
+              .where(
+                (element) => element.type.contains('image'),
+              )
+              .toList();
+          if (imageOnlyFiles.isNotEmpty) {
+            filteredList.add(imageModel.copyWith(images: imageOnlyFiles));
+          }
+        }
+
         emit(
           state.copyWith(
             pageStatus: PageStatus.loaded,
@@ -48,5 +51,9 @@ class GalleryCubit extends Cubit<GalleryState> {
         );
       },
     );
+  }
+
+  void updateSelectedImage({required GalleryItemModel selectedImage}) {
+    emit(state.copyWith(selectedImage: selectedImage));
   }
 }
