@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:spartapp_test/features/gallery/presentation/pages/gallery_page.dart';
-import 'package:spartapp_test/features/gallery/presentation/pages/image_detail_page.dart';
+import 'package:spartapp_test/presentation/gallery/gallery_page.dart';
+import 'package:spartapp_test/presentation/image_detail/image_detail_page.dart';
 import 'package:spartapp_test/routes/app_route_data.dart';
 
 class AppRouter {
