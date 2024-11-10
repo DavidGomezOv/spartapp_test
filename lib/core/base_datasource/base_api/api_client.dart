@@ -10,13 +10,10 @@ class ApiClient implements BaseApiClient {
   @override
   Future<T> invokeGet<T>({
     required String path,
-    Map<String, String>? headerParams,
+    Map<String, String>? queryParams,
     required BaseJsonParser<T> jsonParser,
   }) async {
-    final url = Uri.https(
-      'api.imgur.com',
-      path,
-    );
+    final url = Uri.https('api.imgur.com', path, queryParams);
 
     try {
       final response = await http.get(

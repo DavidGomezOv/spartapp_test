@@ -9,7 +9,20 @@ class GalleryApi {
 
   Future<List<GalleryItemModel>> fetchGallery({required int page}) async =>
       await baseApiClient.invokeGet<List<GalleryItemModel>>(
-        path: '/3/gallery/top/viral/$page',
+        path: '/3/gallery/hot/viral/$page',
+        jsonParser: ListJsonParser<GalleryItemModel>(
+          fromJson: GalleryItemModel.fromJsonModel,
+          jsonKeyName: 'data',
+        ),
+      );
+
+  Future<List<GalleryItemModel>> fetchGalleryBySearch({
+    required String searchCriteria,
+    required int page,
+  }) async =>
+      await baseApiClient.invokeGet<List<GalleryItemModel>>(
+        path: '/3/gallery/search/viral/$page',
+        queryParams: {'q': searchCriteria},
         jsonParser: ListJsonParser<GalleryItemModel>(
           fromJson: GalleryItemModel.fromJsonModel,
           jsonKeyName: 'data',

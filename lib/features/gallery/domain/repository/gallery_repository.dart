@@ -3,4 +3,9 @@ import 'package:spartapp_test/features/gallery/domain/models/image/gallery_item_
 
 abstract class GalleryRepository {
   Future<Result<List<GalleryItemModel>>> fetchGallery({required int page});
+
+  Future<Result<List<GalleryItemModel>>> fetchGalleryBySearch({
+    required String searchCriteria,
+    required int page,
+  });
 }

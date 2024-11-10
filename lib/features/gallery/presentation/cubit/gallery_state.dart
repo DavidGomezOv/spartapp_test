@@ -6,6 +6,7 @@ class GalleryState with _$GalleryState {
     @Default([]) List<GalleryItemModel> images,
     GalleryItemModel? selectedImage,
     @Default(0) int currentPage,
+    String? searchCriteria,
     @Default(PageStatus.loading) PageStatus pageStatus,
     String? errorMessage,
   }) = _Loaded;

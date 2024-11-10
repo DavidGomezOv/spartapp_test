@@ -10,9 +10,23 @@ class GalleryRepositoryImpl implements GalleryRepository {
   GalleryRepositoryImpl({required this.galleryApi});
 
   @override
-  Future<Result<List<GalleryItemModel>>> fetchGallery({required int page}) => _captureErrorsOnApiCall(
+  Future<Result<List<GalleryItemModel>>> fetchGallery({required int page}) =>
+      _captureErrorsOnApiCall(
         apiCall: galleryApi.fetchGallery(page: page),
       );
+
+  @override
+  Future<Result<List<GalleryItemModel>>> fetchGalleryBySearch({
+    required String searchCriteria,
+    required int page,
+  }) {
+    return _captureErrorsOnApiCall(
+        apiCall: galleryApi.fetchGalleryBySearch(
+          searchCriteria: searchCriteria,
+          page: page,
+        ),
+      );
+  }
 
   Future<Result<T>> _captureErrorsOnApiCall<T>({required Future<T> apiCall}) async {
     try {

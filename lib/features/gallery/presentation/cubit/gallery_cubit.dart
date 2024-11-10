@@ -13,16 +13,21 @@ class GalleryCubit extends Cubit<GalleryState> {
 
   final GalleryRepository galleryRepository;
 
-  Future<void> fetchGallery() async {
+  Future<void> fetchGallery({int? page}) async {
     emit(state.copyWith(pageStatus: PageStatus.loading));
 
-    final currentPage = state.currentPage + 1;
+    final currentPage = page ?? state.currentPage + 1;
 
-    final result = await galleryRepository.fetchGallery(page: currentPage);
+    final result = state.searchCriteria != null
+        ? await galleryRepository.fetchGalleryBySearch(
+            searchCriteria: state.searchCriteria!,
+            page: currentPage,
+          )
+        : await galleryRepository.fetchGallery(page: currentPage);
 
     result.when(
       success: (data) {
-        final filteredList = [];
+        final List<GalleryItemModel> filteredList = [];
         for (final imageModel in data) {
           final imageOnlyFiles = imageModel.images
               .where(
@@ -55,5 +60,10 @@ class GalleryCubit extends Cubit<GalleryState> {
 
   void updateSelectedImage({required GalleryItemModel selectedImage}) {
     emit(state.copyWith(selectedImage: selectedImage));
+  }
+
+  void updateSearchCriteria({String? searchCriteria}) {
+    emit(state.copyWith(searchCriteria: searchCriteria, images: []));
+    fetchGallery(page: 1);
   }
 }

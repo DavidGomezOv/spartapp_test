@@ -47,7 +47,7 @@ class GalleryGridItemWidget extends StatelessWidget {
             ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(10),
               color: CustomColors.tertiary,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
