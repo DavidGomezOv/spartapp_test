@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_model.dart';
+import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
 import 'package:spartapp_test/presentation/gallery/widgets/gallery_grid_item_widget.dart';
 import 'package:spartapp_test/presentation/image_detail/cubit/image_detail_cubit.dart';
 import 'package:spartapp_test/routes/app_router.dart';

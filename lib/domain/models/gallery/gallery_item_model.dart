@@ -1,11 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_image_model.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_tag_model.dart';
+import 'package:spartapp_test/data/models/gallery/gallery_item_local_model.dart';
+import 'package:spartapp_test/domain/models/gallery/gallery_item_image_model.dart';
+import 'package:spartapp_test/domain/models/gallery/gallery_item_tag_model.dart';
 
 part 'gallery_item_model.freezed.dart';
 
 @freezed
 class GalleryItemModel with _$GalleryItemModel {
+  const GalleryItemModel._();
+
   const factory GalleryItemModel({
     required String id,
     @Default('') String title,
@@ -38,5 +41,23 @@ class GalleryItemModel with _$GalleryItemModel {
                 )
                 .toList()
             : [],
+      );
+
+  factory GalleryItemModel.fromEntity(GalleryItemLocalModel entity) => GalleryItemModel(
+        id: entity.id,
+        title: entity.title,
+        description: entity.description,
+        datetime: entity.datetime,
+        accountUrl: entity.accountUrl,
+        views: entity.views,
+        images: entity.images
+            .map(
+              (element) => GalleryItemImageModel(
+                link: element.link,
+                description: element.description,
+                type: element.type,
+              ),
+            )
+            .toList(),
       );
 }

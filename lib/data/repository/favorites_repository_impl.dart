@@ -1,37 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:spartapp_test/core/result.dart';
-import 'package:spartapp_test/data/datasource/gallery_local.dart';
-import 'package:spartapp_test/data/models/gallery_item_local_image_model.dart';
-import 'package:spartapp_test/data/models/gallery_item_local_model.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_image_model.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_model.dart';
+import 'package:spartapp_test/data/datasource/gallery_local_source.dart';
+import 'package:spartapp_test/data/models/gallery/gallery_item_local_model.dart';
+import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
 import 'package:spartapp_test/domain/repository/favorites_repository.dart';
 
 class FavoritesRepositoryImpl implements FavoritesRepository {
-  final GalleryLocal galleryLocal;
+  final GalleryLocalSource galleryLocalSource;
 
-  FavoritesRepositoryImpl({required this.galleryLocal});
+  FavoritesRepositoryImpl({required this.galleryLocalSource});
 
   @override
   Future<Result<bool>> addFavorite({required GalleryItemModel galleryItemModel}) {
-    final entity = GalleryItemLocalModel(
-      id: galleryItemModel.id,
-      title: galleryItemModel.title,
-      description: galleryItemModel.description,
-      datetime: galleryItemModel.datetime,
-      accountUrl: galleryItemModel.accountUrl,
-      views: galleryItemModel.views,
-      images: galleryItemModel.images
-          .map(
-            (element) => GalleryItemLocalImageModel(
-              link: element.link,
-              description: element.description,
-              type: element.type,
-            ),
-          )
-          .toList(),
-    );
-    return galleryLocal
+    final entity = GalleryItemLocalModel.fromDomainModel(galleryItemModel);
+    return galleryLocalSource
         .addFavorite(entityModel: entity)
         .then(
           (value) => const Result.success(data: true),
@@ -43,27 +25,11 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
 
   @override
   Future<Result<List<GalleryItemModel>>> getFavorites() async {
-    return galleryLocal.getAllFavorites().then(
+    return galleryLocalSource.getAllFavorites().then(
       (value) {
         final data = value
             .map(
-              (element) => GalleryItemModel(
-                id: element.id,
-                title: element.title,
-                description: element.description,
-                datetime: element.datetime,
-                accountUrl: element.accountUrl,
-                views: element.views,
-                images: element.images
-                    .map(
-                      (element) => GalleryItemImageModel(
-                        link: element.link,
-                        description: element.description,
-                        type: element.type,
-                      ),
-                    )
-                    .toList(),
-              ),
+              (element) => GalleryItemModel.fromEntity(element),
             )
             .toList();
         return Result.success(data: data);
@@ -75,7 +41,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
 
   @override
   Future<Result<bool>> deleteFavorite({required String id}) async {
-    final itemKey = await galleryLocal.getAllFavorites().then(
+    final itemKey = await galleryLocalSource.getAllFavorites().then(
       (value) {
         final data = value.firstWhereOrNull(
           (element) => element.id == id,
@@ -83,7 +49,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
         return data?.key;
       },
     );
-    return galleryLocal
+    return galleryLocalSource
         .deleteFavorite(key: itemKey)
         .then(
           (value) => const Result.success(data: true),

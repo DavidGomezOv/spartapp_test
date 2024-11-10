@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spartapp_test/core/enums.dart';
-import 'package:spartapp_test/presentation/gallery/cubit/gallery_cubit.dart';
+import 'package:spartapp_test/presentation/gallery/cubit/gallery/gallery_cubit.dart';
+import 'package:spartapp_test/presentation/gallery/cubit/search_history/search_history_cubit.dart';
 import 'package:spartapp_test/presentation/widgets/base_scaffold_widget.dart';
 import 'package:spartapp_test/presentation/widgets/error_screen_widget.dart';
 import 'package:spartapp_test/presentation/gallery/widgets/gallery_grid_widget.dart';
@@ -50,10 +51,21 @@ class GalleryPage extends StatelessWidget {
                     TapRegion(
                       onTapOutside: (event) => FocusScope.of(context).requestFocus(FocusNode()),
                       child: GallerySearchBarWidget(
-                        onSearchTriggered: (searchCriteria) =>
-                            context.read<GalleryCubit>().updateSearchCriteria(
-                                  searchCriteria: searchCriteria,
-                                ),
+                        onSearchTriggered: (String? searchCriteria) {
+                          context.read<GalleryCubit>().updateSearchCriteria(
+                                searchCriteria: searchCriteria,
+                              );
+                          if (searchCriteria != null) {
+                            context
+                                .read<SearchHistoryCubit>()
+                                .addSearchHistoryItem(searchCriteria: searchCriteria);
+                          }
+                        },
+                        onDeleteTap: (String searchCriteria) {
+                          context
+                              .read<SearchHistoryCubit>()
+                              .deleteSearchHistoryItem(searchCriteria: searchCriteria);
+                        },
                       ),
                     ),
                   const SizedBox(height: 16),

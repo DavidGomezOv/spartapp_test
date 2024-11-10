@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_model.dart';
+import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
 import 'package:spartapp_test/theme/custom_colors.dart';
 
 class GalleryGridItemWidget extends StatelessWidget {

@@ -1,7 +1,7 @@
-import 'package:spartapp_test/data/models/gallery_item_local_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:spartapp_test/data/models/gallery/gallery_item_local_model.dart';
 
-class GalleryLocal {
+class GalleryLocalSource {
   final String _boxName = "favoriteImagesBox";
 
   Future<Box<GalleryItemLocalModel>> get _box async =>

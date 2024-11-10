@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:spartapp_test/domain/models/image/gallery_item_model.dart';
+import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
 import 'package:spartapp_test/domain/repository/favorites_repository.dart';
 
 part 'image_detail_state.dart';
