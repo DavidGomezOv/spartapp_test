@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:spartapp_test/features/gallery/domain/models/image/gallery_item_model.dart';
-import 'package:spartapp_test/theme/custom_colors.dart';
 
 class ImageDetailImagesList extends StatelessWidget {
   const ImageDetailImagesList({super.key, required this.selectedImage});
@@ -29,8 +28,8 @@ class ImageDetailImagesList extends StatelessWidget {
                     height: 100,
                     width: 100,
                     padding: const EdgeInsets.all(20),
-                    child: CircularProgressIndicator(
-                      color: CustomColors.surface,
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
                     ),
                   ),
                 ),

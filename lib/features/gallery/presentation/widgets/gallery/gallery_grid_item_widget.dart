@@ -36,8 +36,8 @@ class GalleryGridItemWidget extends StatelessWidget {
                       height: 100,
                       width: 100,
                       padding: const EdgeInsets.all(20),
-                      child: CircularProgressIndicator(
-                        color: CustomColors.surface,
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
                       ),
                     ),
                   ),

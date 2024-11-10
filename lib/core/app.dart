@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spartapp_test/core/base_datasource/base_api/api_client.dart';
 import 'package:spartapp_test/features/gallery/data/datasource/gallery_api.dart';
+import 'package:spartapp_test/features/gallery/data/datasource/gallery_local.dart';
 import 'package:spartapp_test/features/gallery/data/repository/gallery_repository_impl.dart';
 import 'package:spartapp_test/features/gallery/domain/repository/gallery_repository.dart';
 import 'package:spartapp_test/features/gallery/presentation/cubit/gallery_cubit.dart';
@@ -18,6 +19,7 @@ class App extends StatelessWidget {
         galleryApi: GalleryApi(
           baseApiClient: ApiClient(),
         ),
+        galleryLocal: GalleryLocal(),
       ),
       child: BlocProvider(
         create: (context) => GalleryCubit(

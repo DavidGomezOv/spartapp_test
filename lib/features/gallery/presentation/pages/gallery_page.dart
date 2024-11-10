@@ -13,26 +13,54 @@ class GalleryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FocusNode focusNode = FocusNode();
-
     return BaseScaffoldWidget(
       padding: const EdgeInsets.all(16),
       backgroundColor: CustomColors.primary,
       appbarTitle: 'Imgur',
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          TapRegion(
-            onTapOutside: (event) => FocusScope.of(context).requestFocus(FocusNode()),
-            child: GallerySearchBarWidget(
-              focusNode: focusNode,
-              onSearchTriggered: (searchCriteria) =>
-                  context.read<GalleryCubit>().updateSearchCriteria(
-                        searchCriteria: searchCriteria,
-                      ),
+      floatingActionButton: BlocBuilder<GalleryCubit, GalleryState>(
+        buildWhen: (previous, current) => previous.showingFavorites != current.showingFavorites,
+        builder: (context, state) {
+          return FloatingActionButton(
+            backgroundColor: CustomColors.greenText,
+            onPressed: () => context.read<GalleryCubit>().updateShowFavorites(),
+            child: Icon(
+              state.showingFavorites ? Icons.manage_search_outlined : Icons.favorite_outlined,
+              size: 30,
+              color: CustomColors.surface,
             ),
+          );
+        },
+      ),
+      body: Column(
+        children: [
+          BlocBuilder<GalleryCubit, GalleryState>(
+            buildWhen: (previous, current) => previous.showingFavorites != current.showingFavorites,
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (state.showingFavorites)
+                    Text(
+                      'Favorites',
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    )
+                  else
+                    TapRegion(
+                      onTapOutside: (event) => FocusScope.of(context).requestFocus(FocusNode()),
+                      child: GallerySearchBarWidget(
+                        onSearchTriggered: (searchCriteria) =>
+                            context.read<GalleryCubit>().updateSearchCriteria(
+                                  searchCriteria: searchCriteria,
+                                ),
+                      ),
+                    ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            },
           ),
-          const SizedBox(height: 16),
           Expanded(
             child: BlocConsumer<GalleryCubit, GalleryState>(
               listener: (context, state) {
@@ -41,6 +69,7 @@ class GalleryPage extends StatelessWidget {
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
                       SnackBar(
+                        duration: const Duration(seconds: 5),
                         behavior: SnackBarBehavior.floating,
                         backgroundColor: CustomColors.surface,
                         content: Text(
@@ -54,8 +83,8 @@ class GalleryPage extends StatelessWidget {
               },
               builder: (context, state) {
                 if (state.pageStatus == PageStatus.loading && state.images.isEmpty) {
-                  return Center(
-                    child: CircularProgressIndicator(color: CustomColors.surface),
+                  return const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
                   );
                 }
 
@@ -63,10 +92,23 @@ class GalleryPage extends StatelessWidget {
                   return ErrorScreenWidget(errorMessage: state.errorMessage);
                 }
 
+                if (state.images.isEmpty) {
+                  return Center(
+                    child: Text(
+                      state.showingFavorites
+                          ? 'You don\'t have favorites yet, try adding one first...'
+                          : 'No images available',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+
                 return NotificationListener<ScrollEndNotification>(
                   onNotification: (notification) {
                     if (notification.metrics.pixels > notification.metrics.maxScrollExtent - 1500 &&
-                        state.pageStatus != PageStatus.loading) {
+                        state.pageStatus != PageStatus.loading &&
+                        !state.showingFavorites) {
                       context.read<GalleryCubit>().fetchGallery();
                       return true;
                     }

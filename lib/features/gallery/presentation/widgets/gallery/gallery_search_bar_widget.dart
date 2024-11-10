@@ -4,11 +4,9 @@ import 'package:spartapp_test/theme/custom_colors.dart';
 class GallerySearchBarWidget extends StatefulWidget {
   const GallerySearchBarWidget({
     super.key,
-    required this.focusNode,
     required this.onSearchTriggered,
   });
 
-  final FocusNode focusNode;
   final Function(String? searchCriteria) onSearchTriggered;
 
   @override
@@ -17,6 +15,7 @@ class GallerySearchBarWidget extends StatefulWidget {
 
 class _GallerySearchBarWidgetState extends State<GallerySearchBarWidget> {
   final SearchController _searchController = SearchController();
+  final FocusNode _focusNode = FocusNode();
 
   static const defaultSearchSuggestions = [
     'Cats',
@@ -29,7 +28,7 @@ class _GallerySearchBarWidgetState extends State<GallerySearchBarWidget> {
   @override
   void dispose() {
     _searchController.dispose();
-    widget.focusNode.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -47,14 +46,14 @@ class _GallerySearchBarWidgetState extends State<GallerySearchBarWidget> {
       headerTextStyle: Theme.of(context).textTheme.titleLarge,
       viewOnSubmitted: (value) {
         _searchController.closeView(value);
-        widget.focusNode.unfocus();
+        _focusNode.unfocus();
         widget.onSearchTriggered(value);
       },
       viewBackgroundColor: CustomColors.secondary,
       viewLeading: IconButton(
         onPressed: () {
           _searchController.closeView(null);
-          widget.focusNode.unfocus();
+          _focusNode.unfocus();
         },
         icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
       ),
@@ -62,7 +61,7 @@ class _GallerySearchBarWidgetState extends State<GallerySearchBarWidget> {
         IconButton(
           onPressed: () {
             _searchController.closeView('');
-            widget.focusNode.unfocus();
+            _focusNode.unfocus();
             widget.onSearchTriggered(null);
           },
           icon: const Icon(Icons.close_rounded, color: Colors.white),
@@ -70,7 +69,7 @@ class _GallerySearchBarWidgetState extends State<GallerySearchBarWidget> {
       ],
       builder: (BuildContext context, SearchController controller) {
         return SearchBar(
-          focusNode: widget.focusNode,
+          focusNode: _focusNode,
           hintText: 'Search images here...',
           hintStyle: WidgetStatePropertyAll(
             Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white60),
@@ -98,7 +97,7 @@ class _GallerySearchBarWidgetState extends State<GallerySearchBarWidget> {
             ),
             onTap: () {
               controller.closeView(element);
-              widget.focusNode.unfocus();
+              _focusNode.unfocus();
               widget.onSearchTriggered(element);
             },
             contentPadding: const EdgeInsets.only(left: 20),

@@ -8,4 +8,10 @@ abstract class GalleryRepository {
     required String searchCriteria,
     required int page,
   });
+
+  Future<Result<bool>> addFavorite({required GalleryItemModel galleryItemModel});
+
+  Future<Result<List<GalleryItemModel>>> getFavorites();
+
+  Future<Result<bool>> deleteFavorite({required String id});
 }

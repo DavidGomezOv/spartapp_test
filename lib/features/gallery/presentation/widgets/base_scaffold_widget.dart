@@ -9,6 +9,8 @@ class BaseScaffoldWidget extends StatelessWidget {
     required this.body,
     this.leading,
     this.padding = EdgeInsets.zero,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
   });
 
   final Color? backgroundColor;
@@ -16,6 +18,8 @@ class BaseScaffoldWidget extends StatelessWidget {
   final Widget body;
   final Widget? leading;
   final EdgeInsets padding;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +48,8 @@ class BaseScaffoldWidget extends StatelessWidget {
         padding: padding,
         child: body,
       ),
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
     );
   }
 }

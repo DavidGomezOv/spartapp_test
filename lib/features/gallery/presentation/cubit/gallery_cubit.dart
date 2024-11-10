@@ -58,6 +58,28 @@ class GalleryCubit extends Cubit<GalleryState> {
     );
   }
 
+  Future<void> getFavorites() async {
+    emit(state.copyWith(pageStatus: PageStatus.loading));
+
+    final result = await galleryRepository.getFavorites();
+
+    result.when(
+      success: (data) {
+        emit(
+          state.copyWith(pageStatus: PageStatus.loaded, images: data),
+        );
+      },
+      failure: (error) {
+        emit(
+          state.copyWith(
+            pageStatus: PageStatus.failedToLoad,
+            errorMessage: error.toString(),
+          ),
+        );
+      },
+    );
+  }
+
   void updateSelectedImage({required GalleryItemModel selectedImage}) {
     emit(state.copyWith(selectedImage: selectedImage));
   }
@@ -65,5 +87,14 @@ class GalleryCubit extends Cubit<GalleryState> {
   void updateSearchCriteria({String? searchCriteria}) {
     emit(state.copyWith(searchCriteria: searchCriteria, images: []));
     fetchGallery(page: 1);
+  }
+
+  void updateShowFavorites() {
+    emit(state.copyWith(showingFavorites: !state.showingFavorites, images: []));
+    if (state.showingFavorites) {
+      getFavorites();
+    } else {
+      fetchGallery(page: 1);
+    }
   }
 }
