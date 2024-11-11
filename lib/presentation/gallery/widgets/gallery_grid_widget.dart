@@ -23,7 +23,9 @@ class GalleryGridWidget extends StatelessWidget {
         itemBuilder: (context, index) => GalleryGridItemWidget(
           image: images[index],
           onTap: (image) {
-            context.read<ImageDetailCubit>().updateSelectedImage(selectedImage: image);
+            context.read<ImageDetailCubit>()
+              ..updateSelectedImage(selectedImage: image)
+              ..fetchImageComments();
             context.goNamed(AppRouter.imageDetailRouteData.name);
           },
         ),

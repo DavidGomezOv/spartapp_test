@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:spartapp_test/core/exceptions.dart';
 import 'package:spartapp_test/data/datasource/gallery_api.dart';
 import 'package:spartapp_test/data/repository/gallery_repository_impl.dart';
 import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
@@ -43,7 +42,6 @@ void main() {
     clearInteractions(mockGalleryApi);
   });
 
-  final badRequestError = Exception('Something happened on the server');
   const page = 1;
 
   group('GalleryRepository - fetchGallery', () {

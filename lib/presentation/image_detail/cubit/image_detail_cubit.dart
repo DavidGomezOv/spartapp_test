@@ -2,16 +2,22 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
+import 'package:spartapp_test/domain/models/image_detail/image_comment_model.dart';
 import 'package:spartapp_test/domain/repository/favorites_repository.dart';
+import 'package:spartapp_test/domain/repository/image_detail_repository.dart';
 
 part 'image_detail_state.dart';
 
 part 'image_detail_cubit.freezed.dart';
 
 class ImageDetailCubit extends Cubit<ImageDetailState> {
-  ImageDetailCubit({required this.favoritesRepository}) : super(const ImageDetailState());
+  ImageDetailCubit({
+    required this.favoritesRepository,
+    required this.imageDetailRepository,
+  }) : super(const ImageDetailState());
 
   final FavoritesRepository favoritesRepository;
+  final ImageDetailRepository imageDetailRepository;
 
   Future<void> addImageToFavorites() async {
     if (state.selectedImage == null) return;
@@ -60,6 +66,33 @@ class ImageDetailCubit extends Cubit<ImageDetailState> {
         emit(
           state.copyWith(
             imageDetailStatus: ImageDetailFavoriteStatus.failed,
+            errorMessage: error.toString(),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> fetchImageComments() async {
+    if (state.selectedImage == null) return;
+
+    emit(state.copyWith(imageCommentsStatus: ImageCommentsStatus.loading));
+
+    final result = await imageDetailRepository.fetchImageComments(imageId: state.selectedImage!.id);
+
+    result.when(
+      success: (data) {
+        emit(
+          state.copyWith(
+            imageComments: data,
+            imageCommentsStatus: ImageCommentsStatus.loaded,
+          ),
+        );
+      },
+      failure: (error) {
+        emit(
+          state.copyWith(
+            imageCommentsStatus: ImageCommentsStatus.failedToLoad,
             errorMessage: error.toString(),
           ),
         );

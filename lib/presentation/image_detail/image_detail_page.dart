@@ -26,8 +26,8 @@ class ImageDetailPage extends StatelessWidget {
       ),
       body: BlocConsumer<ImageDetailCubit, ImageDetailState>(
         listener: (context, state) {
-          if (state.imageDetailStatus != ImageDetailFavoriteStatus.initial &&
-              state.imageDetailStatus != ImageDetailFavoriteStatus.loading) {
+          if (state.imageDetailStatus == ImageDetailFavoriteStatus.addedToFavorites ||
+              state.imageDetailStatus == ImageDetailFavoriteStatus.deletedFromFavorites) {
             final galleryCubit = context.read<GalleryCubit>();
             if (galleryCubit.state.showingFavorites) {
               galleryCubit.getFavorites();
@@ -48,6 +48,22 @@ class ImageDetailPage extends StatelessWidget {
                   ),
                 ),
               );
+          } else if (state.imageDetailStatus == ImageDetailFavoriteStatus.failed ||
+              state.imageCommentsStatus == ImageCommentsStatus.failedToLoad) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 5),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: CustomColors.surface,
+                  content: Text(
+                    state.errorMessage ?? 'An error occurred, please try again later',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
           }
         },
         builder: (context, state) {
@@ -60,8 +76,7 @@ class ImageDetailPage extends StatelessWidget {
                 ImageDetailHeaderWidget(selectedImage: state.selectedImage!),
                 const SizedBox(height: 12),
                 ImageDetailImagesList(selectedImage: state.selectedImage!),
-                const SizedBox(height: 12),
-                const ImageDetailCommentsWidget(),
+                ImageDetailCommentsWidget(comments: state.imageComments),
               ],
             ),
           );

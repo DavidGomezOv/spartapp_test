@@ -43,8 +43,6 @@ void main() {
     clearInteractions(mockFavoritesLocalSource);
   });
 
-  final badRequestError = Exception('Something happened on the Hive database');
-
   group('FavoriteRepository - getAllFavorites', () {
     test('Given a successfully API response should return Success with GalleryItemModel list',
         () async {

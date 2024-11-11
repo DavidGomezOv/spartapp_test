@@ -37,8 +37,6 @@ void main() {
     clearInteractions(mockSearchHistoryLocalSource);
   });
 
-  final badRequestError = Exception('Something happened on the Hive database');
-
   group('SearchHistoryRepository - getSearchHistory', () {
     test('Given a successfully API response should return Success with SearchHistoryItemModel list',
         () async {

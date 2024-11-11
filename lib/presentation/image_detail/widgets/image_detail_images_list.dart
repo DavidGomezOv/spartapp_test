@@ -21,19 +21,21 @@ class ImageDetailImagesList extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CachedNetworkImage(
-                imageUrl: currentImage.link,
-                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    padding: const EdgeInsets.all(20),
-                    child: const CircularProgressIndicator(
-                      color: Colors.white,
+              Center(
+                child: CachedNetworkImage(
+                  imageUrl: currentImage.link,
+                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      padding: const EdgeInsets.all(20),
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
               const SizedBox(height: 15),
               if (currentImage.description.isNotEmpty)

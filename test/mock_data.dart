@@ -4,9 +4,12 @@ import 'package:spartapp_test/data/models/search_history/search_history_item_loc
 import 'package:spartapp_test/domain/models/gallery/gallery_item_image_model.dart';
 import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
 import 'package:spartapp_test/domain/models/gallery/gallery_item_tag_model.dart';
+import 'package:spartapp_test/domain/models/image_detail/image_comment_model.dart';
 import 'package:spartapp_test/domain/models/search_history/search_history_item_model.dart';
 
 final exception = Exception('Error message');
+
+final badRequestError = Exception('Something happened on the datasource');
 
 const mockedGalleryItemModel = GalleryItemModel(
   id: '1',
@@ -163,4 +166,10 @@ const mockedSearchHistoryList = [
   SearchHistoryItemModel(searchCriteria: 'searchCriteria'),
   SearchHistoryItemModel(searchCriteria: 'searchCriteria'),
   SearchHistoryItemModel(searchCriteria: 'searchCriteria'),
+];
+
+const mockedCommentsList = [
+  ImageCommentModel(author: 'author', comment: 'comment', datetime: 1731264565),
+  ImageCommentModel(author: 'author', comment: 'comment', datetime: 1731264565),
+  ImageCommentModel(author: 'author', comment: 'comment', datetime: 1731264565),
 ];

@@ -12,15 +12,21 @@ import '../../../mock_repository_providers.dart';
 
 void main() {
   late MockFavoritesRepository mockFavoritesRepository;
+  late MockImageDetailRepository mockImageDetailRepository;
   late ImageDetailCubit cubit;
 
   setUp(() {
     mockFavoritesRepository = MockFavoritesRepository();
-    cubit = ImageDetailCubit(favoritesRepository: mockFavoritesRepository);
+    mockImageDetailRepository = MockImageDetailRepository();
+    cubit = ImageDetailCubit(
+      favoritesRepository: mockFavoritesRepository,
+      imageDetailRepository: mockImageDetailRepository,
+    );
   });
 
   tearDown(() {
     reset(mockFavoritesRepository);
+    reset(mockImageDetailRepository);
   });
 
   const mockedNonFavoriteGalleryItemModel = GalleryItemModel(
@@ -124,7 +130,7 @@ void main() {
     );
 
     blocTest<ImageDetailCubit, ImageDetailState>(
-      'emit Failed with GalleryItemModel and errorMessage when addFavorite method called and failed',
+      'emit Failed with GalleryItemModel and Error message when addFavorite method called and failed',
       setUp: () {
         when(() => mockFavoritesRepository.getFavorites()).thenAnswer(
           (_) async => const Result.success(data: mockedGalleryList),
@@ -186,7 +192,7 @@ void main() {
     );
 
     blocTest<ImageDetailCubit, ImageDetailState>(
-      'emit Failed with GalleryItemModel and errorMessage when deleteFavorite method called and failed',
+      'emit Failed with GalleryItemModel and Error message when deleteFavorite method called and failed',
       setUp: () {
         when(() => mockFavoritesRepository.getFavorites()).thenAnswer(
           (_) async => const Result.success(data: mockedGalleryList),
@@ -209,6 +215,70 @@ void main() {
             isImageInFavorites: true,
             imageDetailStatus: ImageDetailFavoriteStatus.failed,
             selectedImage: mockedGalleryItemModel,
+            errorMessage: exception.toString(),
+          ),
+        );
+      },
+    );
+  });
+
+  group('description', () {
+    blocTest<ImageDetailCubit, ImageDetailState>(
+      'emit Loaded with ImageCommentModel list when fetchImageComments method called',
+      setUp: () {
+        when(() => mockFavoritesRepository.getFavorites()).thenAnswer(
+          (_) async => const Result.success(data: mockedGalleryList),
+        );
+        when(
+          () => mockImageDetailRepository.fetchImageComments(
+            imageId: mockedNonFavoriteGalleryItemModel.id,
+          ),
+        ).thenAnswer(
+          (_) async => const Result.success(data: mockedCommentsList),
+        );
+      },
+      build: () => cubit,
+      act: (cubit) {
+        cubit.updateSelectedImage(selectedImage: mockedNonFavoriteGalleryItemModel);
+        cubit.fetchImageComments();
+      },
+      verify: (cubit) {
+        expect(
+          cubit.state,
+          const ImageDetailState(
+            imageCommentsStatus: ImageCommentsStatus.loaded,
+            imageComments: mockedCommentsList,
+            selectedImage: mockedNonFavoriteGalleryItemModel,
+          ),
+        );
+      },
+    );
+
+    blocTest<ImageDetailCubit, ImageDetailState>(
+      'emit Failed with Error message when fetchImageComments method called and failed',
+      setUp: () {
+        when(() => mockFavoritesRepository.getFavorites()).thenAnswer(
+          (_) async => const Result.success(data: mockedGalleryList),
+        );
+        when(
+          () => mockImageDetailRepository.fetchImageComments(
+            imageId: mockedNonFavoriteGalleryItemModel.id,
+          ),
+        ).thenAnswer(
+          (_) async => Result.failure(error: exception),
+        );
+      },
+      build: () => cubit,
+      act: (cubit) {
+        cubit.updateSelectedImage(selectedImage: mockedNonFavoriteGalleryItemModel);
+        cubit.fetchImageComments();
+      },
+      verify: (cubit) {
+        expect(
+          cubit.state,
+          ImageDetailState(
+            imageCommentsStatus: ImageCommentsStatus.failedToLoad,
+            selectedImage: mockedNonFavoriteGalleryItemModel,
             errorMessage: exception.toString(),
           ),
         );
