@@ -6,6 +6,8 @@ import 'package:spartapp_test/domain/models/gallery/gallery_item_model.dart';
 import 'package:spartapp_test/domain/models/gallery/gallery_item_tag_model.dart';
 import 'package:spartapp_test/domain/models/search_history/search_history_item_model.dart';
 
+final exception = Exception('Error message');
+
 const mockedGalleryItemModel = GalleryItemModel(
   id: '1',
   title: 'title',

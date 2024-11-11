@@ -81,7 +81,12 @@ class ImageDetailCubit extends Cubit<ImageDetailState> {
         );
         emit(state.copyWith(isImageInFavorites: data != null));
       },
-      failure: (error) => false,
+      failure: (error) => emit(
+        state.copyWith(
+          isImageInFavorites: false,
+          errorMessage: error.toString(),
+        ),
+      ),
     );
   }
 }
