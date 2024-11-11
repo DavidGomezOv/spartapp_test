@@ -14,47 +14,47 @@ class SearchHistoryRepositoryImpl implements SearchHistoryRepository {
   Future<Result<bool>> addSearchHistoryItem({
     required SearchHistoryItemModel searchHistoryItemModel,
   }) async {
-    final itemKey = await _getItemKey(searchCriteria: searchHistoryItemModel.searchCriteria);
-    if (itemKey != null) return const Result.success(data: false);
+    try {
+      final itemKey = await _getItemKey(searchCriteria: searchHistoryItemModel.searchCriteria);
+      if (itemKey != null) return const Result.success(data: false);
 
-    final entity = SearchHistoryItemLocalModel.fromDomainModel(searchHistoryItemModel);
-    return searchHistoryLocalSource
-        .addSearchHistoryItem(entityModel: entity)
-        .then(
-          (value) => const Result.success(data: true),
-        )
-        .onError(
-          (error, stackTrace) => Result.failure(error: Exception(error.toString())),
-        );
+      final entity = SearchHistoryItemLocalModel.fromDomainModel(searchHistoryItemModel);
+      return searchHistoryLocalSource.addSearchHistoryItem(entityModel: entity).then(
+            (value) => const Result.success(data: true),
+          );
+    } catch (error) {
+      return Result.failure(error: Exception(error.toString()));
+    }
   }
 
   @override
-  Future<Result<List<SearchHistoryItemModel>>> getSearchHistory() {
-    return searchHistoryLocalSource.getSearchHistory().then(
-      (value) {
-        final data = value
-            .map(
-              (element) => SearchHistoryItemModel.fromEntity(element),
-            )
-            .toList();
-        return Result.success(data: data);
-      },
-    ).onError(
-      (error, stackTrace) => Result.failure(error: Exception(error.toString())),
-    );
+  Future<Result<List<SearchHistoryItemModel>>> getSearchHistory() async {
+    try {
+      return searchHistoryLocalSource.getSearchHistory().then(
+        (value) {
+          final data = value
+              .map(
+                (element) => SearchHistoryItemModel.fromEntity(element),
+              )
+              .toList();
+          return Result.success(data: data);
+        },
+      );
+    } catch (error) {
+      return Result.failure(error: Exception(error.toString()));
+    }
   }
 
   @override
   Future<Result<bool>> deleteSearchHistoryItem({required String searchCriteria}) async {
-    final itemKey = await _getItemKey(searchCriteria: searchCriteria);
-    return searchHistoryLocalSource
-        .deleteSearchHistoryItem(key: itemKey)
-        .then(
-          (value) => const Result.success(data: true),
-        )
-        .onError(
-          (error, stackTrace) => Result.failure(error: Exception(error.toString())),
-        );
+    try {
+      final itemKey = await _getItemKey(searchCriteria: searchCriteria);
+      return searchHistoryLocalSource.deleteSearchHistoryItem(key: itemKey).then(
+            (value) => const Result.success(data: true),
+          );
+    } catch (error) {
+      return Result.failure(error: Exception(error.toString()));
+    }
   }
 
   Future<dynamic> _getItemKey({required String searchCriteria}) async {

@@ -25,9 +25,8 @@ class ApiClient implements BaseApiClient {
         case 200:
           return jsonParser.parseFromJson(response.body);
         default:
-          throw ApiException(
-            code: response.statusCode,
-            message: response.reasonPhrase ?? '',
+          throw Exception(
+            response.reasonPhrase ?? '',
           );
       }
     } on TimeoutException catch (_) {

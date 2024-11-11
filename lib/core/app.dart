@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spartapp_test/core/base_datasource/base_api/api_client.dart';
 import 'package:spartapp_test/data/datasource/gallery_api.dart';
-import 'package:spartapp_test/data/datasource/gallery_local_source.dart';
+import 'package:spartapp_test/data/datasource/favorites_local_source.dart';
 import 'package:spartapp_test/data/datasource/search_history_local_source.dart';
 import 'package:spartapp_test/data/repository/favorites_repository_impl.dart';
 import 'package:spartapp_test/data/repository/gallery_repository_impl.dart';
@@ -32,7 +32,7 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<FavoritesRepository>(
           create: (context) => FavoritesRepositoryImpl(
-            galleryLocalSource: GalleryLocalSource(),
+            favoritesLocalSource: FavoritesLocalSource(),
           ),
         ),
         RepositoryProvider<SearchHistoryRepository>(
